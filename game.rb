@@ -6,7 +6,7 @@ load 'specroom.rb'
 
 #require 'pry'
 
-class Game < Vital
+class Game < Doors
   ACTIONS = [
       :north, :east, :south, :west, :look, :fight, :take, :status
   ]
@@ -21,7 +21,7 @@ class Game < Vital
   private
   def start_game
     while @player.alive? and @player.victory_points < 100
-
+      roomdoors
       @current_room = @world.get_room_of(@player)
 
       print_status
@@ -53,7 +53,7 @@ class Game < Vital
   end
 
     def take_player_input
-      vitalishot
+      roomdoors
       print "What's the plan, Van Damme?"
       gets.chomp.to_sym
 
@@ -63,9 +63,26 @@ class Game < Vital
       puts "You are at map coordinates [#{@player.x_coord}, #{@player.y_coord}]"
 
       puts @current_room
+
       if @current_room.content
-        puts "You see #{@current_room.content}"
+        puts ""
+        puts "There's a #{@current_room.content}"
       end
+
+      puts ""
+      if @north == true
+        puts "You see a door to the north."
+      end
+      if @south == true
+        puts "You see a door to the south."
+      end
+      if @east == true
+        puts "You see a door to the east."
+      end
+      if @west == true
+        puts "You see a door to the west."
+      end
+      puts ""
     end
 
 =begin
@@ -91,7 +108,7 @@ class Game < Vital
     def take_action(action)
           case action
             when :look
-              print_status
+              @print_status
             when :north
               if @north == true
                 @world.move_entity_north(@player)

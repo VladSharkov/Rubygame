@@ -1,6 +1,6 @@
-class Vital
+class Doors
 
-  def vitalishot
+  def roomdoors
 
   if @player.x_coord == 0 and @player.y_coord == 0
       @north = true
