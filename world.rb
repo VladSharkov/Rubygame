@@ -5,9 +5,9 @@ class World
   WORLD_HEIGHT  = 10
 
   def initialize
-    #@rooms = Array.new(WORLD_WIDTH, Array.new(WORLD_HEIGHT))
     @rooms = Array.new(WORLD_WIDTH) {Array.new(WORLD_HEIGHT)}
   end
+  
 
   def move_entity_north(entity)
     entity.y_coord += 1 if entity.y_coord < WORLD_HEIGHT-1
