@@ -7,6 +7,14 @@ class World
   def initialize
     #@rooms = Array.new(WORLD_WIDTH, Array.new(WORLD_HEIGHT))
     @rooms = Array.new(WORLD_WIDTH) {Array.new(WORLD_HEIGHT)}
+
+    @rooms = Hash.new
+    10.times do |x|
+      10.times do |y|
+        @rooms[[x,y]] = Room.new
+      end
+    end
+
   end
 
   def move_entity_north(entity)
