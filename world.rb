@@ -1,20 +1,19 @@
-require 'pry'
+require_relative 'room'
 
 class World
-  WORLD_WIDTH   = 10
-  WORLD_HEIGHT  = 10
+  WORLD_WIDTH = 10
+  WORLD_HEIGHT = 10
 
   def initialize
-    #@rooms = Array.new(WORLD_WIDTH, Array.new(WORLD_HEIGHT))
-    @rooms = Array.new(WORLD_WIDTH) {Array.new(WORLD_HEIGHT)}
-
     @rooms = Hash.new
-    10.times do |x|
-      10.times do |y|
+    WORLD_WIDTH.times do |x|
+      WORLD_HEIGHT.times do |y|
         @rooms[[x,y]] = Room.new
       end
     end
 
+    door_builder = DoorBuilder.new
+    door_builder.build_doors(@rooms,WORLD_WIDTH,WORLD_HEIGHT)
   end
 
   def move_entity_north(entity)
@@ -34,40 +33,6 @@ class World
   end
 
   def get_room_of(entity)
-    @rooms[entity.x_coord][entity.y_coord] ||= Room.new
-  end
-end
-
-class Room
-  attr_accessor :size, :content
-
-  def initialize
-    @content    = get_content
-    @size       = get_size
-    @adjective  = get_adjective
-  end
-
-  def interact(player)
-    if @content
-      @content.interact(player)
-      @content = nil
-    end
-  end
-
-  def to_s
-    "You are in a #{@size} room. It is #{@adjective}."
-  end
-
-  private
-  def get_content
-    [Monster, Item].sample.new
-  end
-
-  def get_size
-    ["small", "medium", "large"].sample
-  end
-
-  def get_adjective
-    ["pretty", "tiny", "round"].sample
+    @rooms[[entity.x_coord,entity.y_coord]]
   end
 end

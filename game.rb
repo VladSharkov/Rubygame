@@ -2,11 +2,9 @@ require_relative 'player'
 require_relative 'item'
 require_relative 'monsters'
 require_relative 'world'
-require_relative 'doors'
+require_relative 'door_builder'
 
-#require 'pry'
-
-class Game < Doors
+class Game
   ACTIONS = [
       :north, :east, :south, :west, :look, :fight, :take, :status
   ]
@@ -15,13 +13,13 @@ class Game < Doors
     @world = World.new
     @player = Player.new
 
-    start_game
+    run_game
   end
 
   private
-  def start_game
+  def run_game
     while @player.alive? and @player.victory_points < 100
-      roomdoors
+
       @current_room = @world.get_room_of(@player)
 
       print_status
@@ -53,7 +51,7 @@ class Game < Doors
   end
 
     def take_player_input
-      roomdoors
+      build_doors
       print "What's the plan, Van Damme?"
       gets.chomp.to_sym
 
