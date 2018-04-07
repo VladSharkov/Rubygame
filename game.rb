@@ -1,8 +1,8 @@
-load 'player.rb'
-load 'item.rb'
-load 'monsters.rb'
-load 'world.rb'
-load 'specroom.rb'
+require_relative 'player'
+require_relative 'item'
+require_relative 'monsters'
+require_relative 'world'
+require_relative 'doors'
 
 #require 'pry'
 
