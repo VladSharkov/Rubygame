@@ -1,12 +1,11 @@
 require_relative 'player'
 require_relative 'item'
-require_relative 'monsters'
+require_relative 'all_monsters'
 require_relative 'world'
-require_relative 'doors'
+require_relative 'door_builder'
 
-#require 'pry'
 
-class Game < Doors
+class Game
   ACTIONS = [
       :north, :east, :south, :west, :look, :fight, :take, :status
   ]
@@ -15,13 +14,12 @@ class Game < Doors
     @world = World.new
     @player = Player.new
 
-    start_game
+    run_game
   end
 
   private
-  def start_game
+  def run_game
     while @player.alive? and @player.victory_points < 100
-      roomdoors
       @current_room = @world.get_room_of(@player)
 
       print_status
@@ -42,7 +40,7 @@ class Game < Doors
         puts ""
         #@player.hit_points = 0
       end
-      end
+    end
 
 
     if @player.dead
@@ -52,38 +50,37 @@ class Game < Doors
 
   end
 
-    def take_player_input
-      roomdoors
-      print "What's the plan, Van Damme?"
-      gets.chomp.to_sym
+  def take_player_input
+    print "What's the plan, Van Damme?"
+    gets.chomp.to_sym
 
+  end
+
+  def print_status
+    puts "You are at map coordinates [#{@player.x_coord}, #{@player.y_coord}]"
+
+    puts @current_room
+
+    if @current_room.content
+      puts ""
+      puts "There's a #{@current_room.content}"
     end
 
-    def print_status
-      puts "You are at map coordinates [#{@player.x_coord}, #{@player.y_coord}]"
-
-      puts @current_room
-
-      if @current_room.content
-        puts ""
-        puts "There's a #{@current_room.content}"
-      end
-
-      puts ""
-      if @north == true
-        puts "You see a door to the north."
-      end
-      if @south == true
-        puts "You see a door to the south."
-      end
-      if @east == true
-        puts "You see a door to the east."
-      end
-      if @west == true
-        puts "You see a door to the west."
-      end
-      puts ""
+    puts ""
+    if @current_room.doors[:n]
+      puts "You see a door to the north."
     end
+    if @current_room.doors[:s]
+      puts "You see a door to the south."
+    end
+    if @current_room.doors[:e]
+      puts "You see a door to the east."
+    end
+    if @current_room.doors[:w]
+      puts "You see a door to the west."
+    end
+    puts ""
+  end
 
 =begin
     def take_action(action)
@@ -105,46 +102,46 @@ class Game < Doors
         end
 
 =end
-    def take_action(action)
-          case action
-            when :look
-              @print_status
-            when :north
-              if @north == true
-                @world.move_entity_north(@player)
-              else
-                @player.hurt(1)
-                puts "You run into a wall. Ouch! You have #{@player.hit_points} HP remaining."
-              end
-            when :east
-              if @east == true
-                @world.move_entity_east(@player)
-              else
-                @player.hurt(1)
-                puts "You run into a wall. Ouch! You have #{@player.hit_points} HP remaining."
-              end
-            when :south
-              if @south == true
-                @world.move_entity_south(@player)
-              else
-                @player.hurt(1)
-                puts "You run into a wall. Ouch! You have #{@player.hit_points} HP remaining."
-              end
-            when :west
-              if @west == true
-                @world.move_entity_west(@player)
-              else
-                @player.hurt(1)
-                puts "You run into a wall. Ouch! You have #{@player.hit_points} HP remaining."
-              end
-            when :fight, :take
-              @current_room.interact(@player)
-            when :status
-              @player.print_status
-          end
+  def take_action(action)
+    case action
+      when :look
+        @print_status
+      when :north
+        if @current_room.doors[:n]
+          @world.move_entity_north(@player)
+        else
+          @player.hurt(1)
+          puts "You run into a wall. Ouch! You have #{@player.hit_points} HP remaining."
+        end
+      when :east
+        if @current_room.doors[:e]
+          @world.move_entity_east(@player)
+        else
+          @player.hurt(1)
+          puts "You run into a wall. Ouch! You have #{@player.hit_points} HP remaining."
+        end
+      when :south
+        if @current_room.doors[:s]
+          @world.move_entity_south(@player)
+        else
+          @player.hurt(1)
+          puts "You run into a wall. Ouch! You have #{@player.hit_points} HP remaining."
+        end
+      when :west
+        if @current_room.doors[:w]
+          @world.move_entity_west(@player)
+        else
+          @player.hurt(1)
+          puts "You run into a wall. Ouch! You have #{@player.hit_points} HP remaining."
+        end
+      when :fight, :take
+        @current_room.interact(@player)
+      when :status
+        @player.print_status
     end
-
   end
+
+end
 
 
 Game.new

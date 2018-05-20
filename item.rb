@@ -45,6 +45,6 @@ class Item
   end
 
   def to_s
-    "a #{@name}."
+    "#{@name}."
   end
 end

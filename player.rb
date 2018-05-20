@@ -5,7 +5,7 @@ class Player
   MAX_HIT_POINTS = 100
 
   def initialize
-    @hit_points         = 50
+    @hit_points         = 75
     @attack_power       = 1
     @armor              = 0
     @victory_points     = 0
